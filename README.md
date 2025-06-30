@@ -1,40 +1,65 @@
-# (Replace_with_your_title) Cookbook
+<img src="https://www.nasa.gov/wp-content/uploads/2023/03/icesat2-logo_0.jpg" 
+alt="thumbnail" width="300"/>
 
-<img src="thumbnails/thumbnail.png" alt="thumbnail" width="300"/>
+# ICESat-2 Cookbook
 
-[![nightly-build](https://github.com/ProjectPythia/cookbook-template/actions/workflows/nightly-build.yaml/badge.svg)](https://github.com/ProjectPythia/cookbook-template/actions/workflows/nightly-build.yaml)
-[![Binder](https://binder.projectpythia.org/badge_logo.svg)](https://binder.projectpythia.org/v2/gh/ProjectPythia/cookbook-template/main?labpath=notebooks)
-[![DOI](https://zenodo.org/badge/475509405.svg)](https://zenodo.org/badge/latestdoi/475509405)
+[![nightly-build](https://github.com/ICESAT-2HackWeek/icesat2-cookbook/actions/workflows/nightly-build.yaml/badge.svg)](https://github.com/ICESAT-2HackWeek/icesat2-cookbook/actions/workflows/nightly-build.yaml)
+[![Binder](https://binder.projectpythia.org/badge_logo.svg)](https://binder.projectpythia.org/v2/gh/ICESAT-2HackWeek/icesat2-cookbook/main?labpath=notebooks)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10519966.svg)](https://doi.org/10.5281/zenodo.10519966)
 
-_See the [Cookbook Contributor's Guide](https://projectpythia.org/cookbook-guide) for step-by-step instructions on how to create your new Cookbook and get it hosted on the [Pythia Cookbook Gallery](https://cookbooks.projectpythia.org)!_
-
-This Project Pythia Cookbook covers ... (replace `...` with the main subject of your cookbook ... e.g., _working with radar data in Python_)
+This Project Pythia Cookbook is a compilation of tutorials developed from 2019 
+to present as part of the NASA / UW eScience hackweek program. The purpose of
+the tutorials is to help people with data access and to demonstrate a variety
+of disciplinary use cases.
 
 ## Motivation
 
-(Add a few sentences stating why this cookbook will be useful. What skills will you, "the chef", gain once you have reached the end of the cookbook?)
+The ICESat-2 mission provides valuable data for measuring changes in glaciers, 
+ice sheets, sea ice, clouds and land surface systems. There are numerous data
+products and methods for accessing and analyzing data. The goal of these 
+tutorials is to streamline data access, reduce duplication of effort and 
+build an open science community around ICESat-2 algorithms and software.
 
 ## Authors
 
-[First Author](https://github.com/first-author1), [Second Author](https://github.com/second-author2), etc. _Acknowledge primary content authors here_
+[Ben Smith](@smithb), 
+[Michalea King](@michaleaking), 
+[Tyler Sutterley](@tsutterley),
+[Anthony Arendt](@aaarendt),
+[Jessica Scheick](@JessicaS11),
+[Mark Welden-Smith](@markweldensmith)
+
+more to be added
 
 ### Contributors
 
-<a href="https://github.com/ProjectPythia/cookbook-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ProjectPythia/cookbook-template" />
+<a href="https://github.com/ICESAT-2HackWeek/icesat2-cookbook/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ICESAT-2HackWeek/icesat2-cookbook" />
 </a>
 
 ## Structure
 
-(State one or more sections that will comprise the notebook. E.g., _This cookbook is broken up into two main sections - "Foundations" and "Example Workflows."_ Then, describe each section below.)
+This cookbook is broken up into two main sections - "Foundations" 
+and "Example Workflows."
 
-### Section 1 ( Replace with the title of this section, e.g. "Foundations" )
+### Section 1: Foundations
 
-(Add content for this section, e.g., "The foundational content includes ... ")
+* Mission Overview
+* Data Access
+* Filtering
+* Geospatial Transforms
+* Integration
+* Cloud Computing
+* Machine Learning
+* Visualization
 
-### Section 2 ( Replace with the title of this section, e.g. "Example workflows" )
+### Section 2: Example Workflows for Specific Disciplines
 
-(Add content for this section, e.g., "Example workflows include ... ")
+* Land Ice
+* Sea Ice
+* Inland Hydrology
+* Bathymetry
+* Snowdepth
 
 ## Running the Notebooks
 
@@ -64,24 +89,24 @@ executable book chapter.
 
 ### Running on Your Own Machine
 
-If you are interested in running this material locally on your computer, you will need to follow this workflow:
+If you are interested in running this material locally on your computer, 
+you will need to follow this workflow:
 
-(Replace "cookbook-example" with the title of your cookbooks)
 
-1. Clone the `https://github.com/ProjectPythia/cookbook-example` repository:
+1. Clone the `https://github.com/ProjectPythia/icesat2-cookbook` repository:
 
    ```bash
-    git clone https://github.com/ProjectPythia/cookbook-example.git
+    git clone https://github.com/ProjectPythia/icesat2-cookbook.git
    ```
 
-1. Move into the `cookbook-example` directory
+1. Move into the `icesat2-cookbook` directory
    ```bash
    cd cookbook-example
    ```
 1. Create and activate your conda environment from the `environment.yml` file
    ```bash
    conda env create -f environment.yml
-   conda activate cookbook-example
+   conda activate icesat2-cookbook
    ```
 1. Move into the `notebooks` directory and start up Jupyterlab
    ```bash
