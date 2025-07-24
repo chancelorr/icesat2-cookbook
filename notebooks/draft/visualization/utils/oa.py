@@ -3,6 +3,7 @@ import ee
 import geemap
 import json
 import requests
+from urllib.parse import urlencode, urlparse, parse_qs
 import numpy as np
 import pandas as pd
 import matplotlib 
@@ -28,41 +29,50 @@ class dataCollector:
             - or: a track, date, latitude limits and longitude limits.''')
         else:
             if oaurl is not None:
-                url = oaurl
-                tofind = '&beamNames='
-                ids = url.find(tofind)
-                while ids>-1:
-                    url = url.replace(url[ids:ids+len(tofind)+4],'')
-                    ids = url.find(tofind)
-                iprod = url.find('/atl')
-                url = url.replace(url[iprod:iprod+6],'/atlXX')
-                url += tofind + beam + '&client=jupyter'
-
-                idate = url.find('date=') + len('date=')
-                date = url[idate:idate+10]
-                itrack = url.find('trackId=') + len('trackId=')
-                trackend = url[itrack:].find('&')
-                track = int(url[itrack:itrack+trackend])
-                bb = []
-                for s in ['minx=', 'maxx=', 'miny=', 'maxy=']:
-                    ids = url.find(s) + len(s)
-                    ide = url[ids:].find('&')
-                    bb.append(float(url[ids:ids+ide]))
-                lonlims = bb[:2]
-                latlims = bb[2:]
-            elif None not in [track, date, latlims, lonlims]:
-                url = 'https://openaltimetry.earthdatacloud.nasa.gov/data/icesat2/'
-                #url += 'date={date}&minx={minx}&miny={miny}&maxx={maxx}&maxy={maxy}&trackId={track}&beamNames={beam}'.format(
-                #        date=date,minx=lonlims[0],miny=latlims[0],maxx=lonlims[1],maxy=latlims[1],track=track,beam=beam)
-                #url += '&outputFormat=json&client=jupyter'
-                url += ''
+                # Parse oaurl, replace product with atlXX placeholder
+                base_url = 'https://openaltimetry.earthdatacloud.nasa.gov/data/api/icesat2/atlXX'
+                parsed = urlparse(oaurl)
+                query = parse_qs(parsed.query)
+                flat_query = {k: v[0] if len(v) == 1 else v for k, v in query.items()}
+                params = {
+                    'minx': flat_query['minx'],
+                    'maxx': flat_query['maxx'],
+                    'miny': flat_query['miny'], 
+                    'maxy': flat_query['maxy'],
+                    'date': flat_query['date'],
+                    'trackId': flat_query['tracks'],
+                    'beamNames': beam,
+                    'client': 'portal',
+                    'outputFormat': 'json',
+                }
                 
+                query_str = urlencode(params)
+                url = f'{base_url}?{query_str}'
+                
+            elif None not in [track, date, latlims, lonlims]:
+                # Construct oaurl from given parameters
+                base_url = 'https://openaltimetry.earthdatacloud.nasa.gov/data/api/icesat2/atlXX'
+                params = {
+                    "minx": lonlims[0],
+                    "miny": latlims[0],
+                    "maxx": lonlims[1],
+                    "maxy": latlims[1],
+                    "date": date,
+                    "trackId": track,
+                    "beamNames": beam,
+                    'client': 'portal',
+                    'outputFormat': 'json',
+                }
+                
+                query_str = urlencode(params)
+                url = f'{base_url}?{query_str}'
+            
             self.url = url
-            self.date = date
-            self.track = track
+            self.date = params['date']
+            self.track = params['trackId']
             self.beam = beam
-            self.latlims = latlims
-            self.lonlims = lonlims
+            self.latlims = [params['miny'], params['maxy']]
+            self.lonlims = [params['minx'], params['miny']]
             if verbose:
                 print('OpenAltimetry API URL:', self.url)
                 print('Date:', self.date)
@@ -71,15 +81,15 @@ class dataCollector:
                 print('Latitude limits:', self.latlims)
                 print('Longitude limits:', self.lonlims)
                 
-                
     ################################################################################################ 
     def requestData(self, verbose=False): 
         if verbose:
-            print('---> requesting ATL03 data...',end='')
+            print('---> requesting ATL03 data...', end='')
         product = 'atl03'
         try: 
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             lat, lon, h, confs = [], [], [], []
             for beam in data:
                 for confidence in beam['series']:
@@ -93,14 +103,15 @@ class dataCollector:
                 if len(self.atl03)>0: print(' %i data points.' % len(self.atl03))
                 else: print(' No data.')
         except:
-            print(' request failed.')
+            print(f" request failed.")
             
         if verbose: 
             print('---> requesting ATL06 data...',end='')
         try: 
             product = 'atl06'
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl06 = pd.DataFrame(data['series'][0]['lat_lon_elev'], columns = ['lat','lon','h'])
             if verbose:
                 if len(self.atl06)>0: print(' %i data points.' % len(self.atl06)) 
@@ -109,7 +120,8 @@ class dataCollector:
                 print('---> requesting ATL07 data...',end='')
             product = 'atl07'
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl07 = pd.DataFrame(data['series'][0]['lat_lon_elev'], columns = ['lat','lon','h'])
             if verbose:
                 if len(self.atl07)>0: print(' %i data points.' % len(self.atl07)) 
@@ -122,7 +134,8 @@ class dataCollector:
         try: 
             product = 'atl08'
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl08 = pd.DataFrame(data['series'][0]['lat_lon_elev_canopy'], columns = ['lat','lon','h','canopy'])
             if verbose:
                 if len(self.atl08)>0: print(' %i data points.' % len(self.atl08)) 
@@ -131,7 +144,8 @@ class dataCollector:
                 print('---> requesting ATL10 data...',end='')
             product = 'atl10'
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl10 = pd.DataFrame(data['series'][0]['lat_lon_elev'], columns = ['lat','lon','h'])
             if verbose:
                 if len(self.atl10)>0: print(' %i data points.' % len(self.atl10)) 
@@ -144,7 +158,8 @@ class dataCollector:
         product = 'atl12'
         try:
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl12 = pd.DataFrame(data['series'][0]['lat_lon_elev'], columns = ['lat','lon','h'])
             if verbose:
                 if len(self.atl12)>0: print(' %i data points.' % len(self.atl12)) 
@@ -153,7 +168,8 @@ class dataCollector:
                 print('---> requesting ATL13 data...',end='')
             product = 'atl13'
             request_url = self.url.replace('atlXX',product)
-            data = requests.get(request_url).json()
+            response = requests.get(request_url)
+            data = check_oa_response(response)
             self.atl13 = pd.DataFrame(data['series'][0]['lat_lon_elev'], columns = ['lat','lon','h'])
             if verbose:
                 if len(self.atl13)>0: print(' %i data points.' % len(self.atl13)) 
@@ -580,6 +596,30 @@ class dataCollector:
             print('plotting failed')
             traceback.print_exc()
 
+################################################################################################ 
+def check_oa_response(response):
+    """
+    Check and parse OpenAltimetry response.
+    
+    Returns:
+        A tuple (data, message):
+            - data: Parsed JSON data, or None if error
+            - message: OA message string (always present if error), or None
+    Raises:
+        ValueError if the response is not JSON or has unexpected structure
+        requests.HTTPError if the response is a failed request not handled by OA
+    """
+    try:
+        data = response.json()
+    except ValueError:
+        raise ValueError("Response is not valid JSON.")
+
+    if isinstance(data, dict) and data.get("status") == "error":
+        # Soft failure — OA returned a helpful message
+        print(data.get("message"))
+        return None
+
+    return data
 
 ################################################################################################ 
 def add_graticule(img, ax_img):
