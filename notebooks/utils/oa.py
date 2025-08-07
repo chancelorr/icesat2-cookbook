@@ -34,13 +34,14 @@ class dataCollector:
                 parsed = urlparse(oaurl)
                 query = parse_qs(parsed.query)
                 flat_query = {k: v[0] if len(v) == 1 else v for k, v in query.items()}
+                if 'tracks' in query: flat_query['trackId'] = flat_query['tracks']
                 params = {
                     'minx': flat_query['minx'],
                     'maxx': flat_query['maxx'],
                     'miny': flat_query['miny'], 
                     'maxy': flat_query['maxy'],
                     'date': flat_query['date'],
-                    'trackId': flat_query['tracks'],
+                    'trackId': flat_query['trackId'],
                     'beamNames': beam,
                     'client': 'portal',
                     'outputFormat': 'json',
