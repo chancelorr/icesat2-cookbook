@@ -113,3 +113,29 @@ you will need to follow this workflow:
    cd notebooks/
    jupyter lab
    ```
+
+### Running with Pixi
+
+Alternatively, you can use [Pixi](https://pixi.sh/) for a more streamlined environment management experience:
+
+1. Install Pixi following the [installation instructions](https://pixi.sh/latest/#installation)
+
+2. Clone the `https://github.com/ProjectPythia/icesat2-cookbook` repository:
+
+   ```bash
+    git clone https://github.com/ProjectPythia/icesat2-cookbook.git
+   ```
+
+3. Move into the `icesat2-cookbook` directory
+
+   ```bash
+   cd icesat2-cookbook
+   ```
+
+4. Install dependencies and start JupyterLab with a single command:
+
+   ```bash
+   pixi run start
+   ```
+
+This will automatically create the environment, install all dependencies, and launch JupyterLab in the `notebooks` directory.

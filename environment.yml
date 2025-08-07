@@ -9,6 +9,7 @@ dependencies:
   - geodatasets
   - geopandas
   - ipympl
+  - ipykernel
   - matplotlib
   - mystmd
   - numpy

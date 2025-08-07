@@ -1,0 +1,39 @@
+#                             VVVVVV  minimum `pixi` version
+"$schema" = "https://pixi.sh/v0.49.0/schema/manifest/schema.json"
+
+[workspace]
+authors = ["ICESat-2 team"]
+channels = ["conda-forge"]
+name = "cookbook-dev"
+platforms = ["osx-arm64", "linux-64", "win-64"]
+version = "2025.8.7"
+
+[environments]
+default = { features = ["plotting", "linting"], solve-group = "default" }
+
+[tasks]
+start = { cmd = "jupyter lab", cwd = "notebooks", description = "Start JupyterLab in the notebooks directory" }
+
+[dependencies]
+jupyterlab = "*"
+jupyterlab-myst = "*"
+earthaccess = "*"
+geodatasets = "*"
+geopandas = "*"
+ipympl = "*"
+ipykernel = "*"
+mystmd = "*"
+numpy = "*"
+pyproj = "*"
+rioxarray = "*"
+sliderule = "*"
+
+[feature.plotting.dependencies]
+cartopy = "*"
+matplotlib = "*"
+
+[feature.linting.dependencies]
+pre-commit = "*"
+
+[feature.linting.tasks]
+lint = { cmd = "pre-commit run --all-files" }
