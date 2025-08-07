@@ -9,10 +9,11 @@ platforms = ["osx-arm64", "linux-64", "win-64"]
 version = "2025.8.7"
 
 [environments]
-default = { features = ["plotting", "linting"], solve-group = "default" }
+cookbook-dev = { features = ["plotting", "linting"], solve-group = "default" }
 
 [tasks]
 start = { cmd = "jupyter lab", cwd = "notebooks", description = "Start JupyterLab in the notebooks directory" }
+export-env = { cmd = "pixi workspace export conda-environment -e cookbook-dev > environment.yml", description = "Export workspace to a Conda environment file" }
 
 [dependencies]
 jupyterlab = "*"
