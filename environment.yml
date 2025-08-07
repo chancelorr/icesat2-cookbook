@@ -6,7 +6,9 @@ dependencies:
   - jupyterlab-myst
   - cartopy
   - earthaccess
+  - geodatasets
   - geopandas
+  - ipympl
   - matplotlib
   - mystmd
   - numpy
