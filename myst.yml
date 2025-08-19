@@ -12,6 +12,7 @@ project:
     - file: README.md
     - title: Preamble
       children:
+        - file: notebooks/governance.ipynb
         - file: notebooks/how-to-cite.md
     - title: Foundations
       children:
@@ -32,4 +33,6 @@ project:
         - file: notebooks/snowdepth.ipynb
   jupyter:
       binder:
-        repo: projectpythia/cookbook-template
+        url: https://hub.cryointhecloud.com
+        provider: github
+        repo: ICESAT-2HackWeek/icesat2-cookbook
